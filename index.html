@@ -61,11 +61,11 @@
         background-color: var(--card-bg);
         border-radius: 16px;
         box-shadow: var(--shadow);
-        padding: 2rem; /* increased from 1.5rem for breathing space */
+        padding: 2rem;
         width: 100%;
-        max-width: 1150px; /* slightly wider container */
+        max-width: 1150px;
         box-sizing: border-box;
-        overflow: hidden; /* ensures nothing spills visually */
+        overflow: hidden;
       }
 
       .language-bar {
@@ -74,6 +74,7 @@
         justify-content: center;
         margin-bottom: 1.5rem;
         gap: 1rem;
+        flex-wrap: wrap;
       }
 
       select {
@@ -101,13 +102,13 @@
         background-color: #e5e7eb;
         border: 1px solid #d1d5db;
         color: #374151;
-        font-size: 0.9rem; /* slightly smaller arrows */
+        font-size: 0.9rem;
         border-radius: 4px;
-        padding: 0; /* remove padding so arrows are tight */
+        padding: 0;
         cursor: pointer;
-        height: 38px; /* match select height */
+        height: 38px;
         width: 34px;
-        line-height: 0.8; /* controls vertical distance between arrows */
+        line-height: 0.8;
         transition:
           background-color 0.2s ease,
           transform 0.2s ease;
@@ -120,7 +121,7 @@
 
       .btn-swap .arrow {
         display: block;
-        line-height: 0.6; /* make arrows nearly overlap */
+        line-height: 0.6;
         margin: 0;
         padding: 0;
         font-weight: 600;
@@ -143,7 +144,7 @@
         font-size: 1.1rem;
         font-family: inherit;
         box-shadow: inset 0 0 0 1px var(--border-color);
-        box-sizing: border-box; /* include padding + border in width calculation */
+        box-sizing: border-box;
         transition: box-shadow 0.2s ease;
       }
 
@@ -191,17 +192,13 @@
 
   <body>
     <header>
-      <h1>🌍 Translator</h1>
+      <h1>🌍 Simple Translator</h1>
     </header>
 
     <main>
       <form id="translateForm">
         <div class="language-bar">
-          <select id="source_lang" name="source_lang">
-            <option value="en">English</option>
-            <option value="de">German</option>
-            <option value="fr">French</option>
-          </select>
+          <select id="source_lang" name="source_lang"></select>
 
           <button
             type="button"
@@ -213,10 +210,11 @@
             <span class="arrow">←</span>
           </button>
 
-          <select id="target_lang" name="target_lang">
-            <option value="de">German</option>
-            <option value="en">English</option>
-            <option value="fr">French</option>
+          <select id="target_lang" name="target_lang"></select>
+
+          <!-- 🆕 Model selector -->
+          <select id="model_key" name="model_key">
+            <option disabled selected value="">Select Model...</option>
           </select>
         </div>
 
@@ -239,24 +237,69 @@
 
     <footer>
       <p>
-        Powered by Hugging Face MarianMT · Backend API:
+        Powered by Hugging Face MarianMT and mT5 · Backend API:
         <code>/api/translate</code>
       </p>
     </footer>
 
     <script>
+      async function loadLanguages() {
+        try {
+          const res = await fetch("/api/languages");
+          const langs = await res.json();
+          const srcSelect = document.getElementById("source_lang");
+          const tgtSelect = document.getElementById("target_lang");
+
+          langs.forEach((lang) => {
+            const opt1 = new Option(lang.name, lang.code);
+            const opt2 = new Option(lang.name, lang.code);
+            srcSelect.add(opt1);
+            tgtSelect.add(opt2);
+          });
+
+          srcSelect.value = "en";
+          tgtSelect.value = "de";
+        } catch (err) {
+          console.error("Failed to load languages:", err);
+        }
+      }
+
+      async function loadModels() {
+        try {
+          const res = await fetch("/api/models");
+          const models = await res.json();
+          const modelSelect = document.getElementById("model_key");
+
+          models.forEach((m) => {
+            const option = new Option(m.display_name, m.key);
+            modelSelect.add(option);
+          });
+
+          // Default: select Helsinki
+          modelSelect.value = "helsinki";
+        } catch (err) {
+          console.error("Failed to load models:", err);
+        }
+      }
+
       document
         .getElementById("translateForm")
         .addEventListener("submit", async (e) => {
-          e.preventDefault(); // prevent page reload
+          e.preventDefault();
 
           const text = document.getElementById("text").value.trim();
           const source_lang = document.getElementById("source_lang").value;
           const target_lang = document.getElementById("target_lang").value;
+          const model_key = document.getElementById("model_key").value;
           const outputBox = document.getElementById("output");
 
           if (!text) {
             outputBox.value = "⚠️ Please enter text to translate.";
+            return;
+          }
+
+          if (!model_key) {
+            outputBox.value = "⚠️ Please select a model.";
             return;
           }
 
@@ -266,16 +309,15 @@
             const response = await fetch("/api/translate", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ text, source_lang, target_lang }),
+              body: JSON.stringify({
+                text,
+                source_lang,
+                target_lang,
+                model_key,
+              }),
             });
 
-            let data = {};
-            try {
-              data = await response.json();
-            } catch {
-              outputBox.value = `🚨 Failed to parse response JSON: ${jsonErr}`;
-              return;
-            }
+            const data = await response.json();
 
             if (response.ok && data.translated_text) {
               outputBox.value = data.translated_text;
@@ -287,15 +329,14 @@
           }
         });
 
-      // Handle swap languages button
+      // Swap source and target languages
       document.getElementById("swapButton").addEventListener("click", () => {
-        const source = document.getElementById("source_lang");
-        const target = document.getElementById("target_lang");
-        const temp = source.value;
-        source.value = target.value;
-        target.value = temp;
+        const src = document.getElementById("source_lang");
+        const tgt = document.getElementById("target_lang");
+        const tmp = src.value;
+        src.value = tgt.value;
+        tgt.value = tmp;
 
-        // Optional: also swap input/output text
         const input = document.getElementById("text");
         const output = document.getElementById("output");
         if (output.value.trim()) {
@@ -303,6 +344,10 @@
           output.value = "";
         }
       });
+
+      // Initialize dropdowns
+      loadLanguages();
+      loadModels();
     </script>
   </body>
 </html>

@@ -4,6 +4,8 @@
 #
 #    pip-compile --extra=dev --output-file=requirements.txt pyproject.toml
 #
+accelerate==1.10.1
+    # via huggingface-ghcr (pyproject.toml)
 annotated-types==0.7.0
     # via pydantic
 anyio==4.11.0
@@ -50,6 +52,7 @@ httpx==0.28.1
     # via huggingface-ghcr (pyproject.toml)
 huggingface-hub==0.35.3
     # via
+    #   accelerate
     #   tokenizers
     #   transformers
 idna==3.11
@@ -76,7 +79,9 @@ mypy-extensions==1.1.0
 networkx==3.5
     # via torch
 numpy==2.3.3
-    # via transformers
+    # via
+    #   accelerate
+    #   transformers
 nvidia-cublas-cu12==12.8.4.1
     # via
     #   nvidia-cudnn-cu12
@@ -116,6 +121,7 @@ nvidia-nvtx-cu12==12.8.90
     # via torch
 packaging==25.0
     # via
+    #   accelerate
     #   black
     #   huggingface-hub
     #   pytest
@@ -128,6 +134,10 @@ platformdirs==4.5.0
     # via black
 pluggy==1.6.0
     # via pytest
+protobuf==4.25.8
+    # via huggingface-ghcr (pyproject.toml)
+psutil==7.1.0
+    # via accelerate
 pydantic==2.12.1
     # via
     #   fastapi
@@ -148,6 +158,7 @@ pytokens==0.1.10
     # via black
 pyyaml==6.0.3
     # via
+    #   accelerate
     #   huggingface-hub
     #   transformers
     #   uvicorn
@@ -164,7 +175,9 @@ ruff==0.5.0
 sacremoses==0.1.1
     # via huggingface-ghcr (pyproject.toml)
 safetensors==0.6.2
-    # via transformers
+    # via
+    #   accelerate
+    #   transformers
 sentencepiece==0.2.1
     # via huggingface-ghcr (pyproject.toml)
 sniffio==1.3.1
@@ -176,7 +189,9 @@ sympy==1.14.0
 tokenizers==0.22.1
     # via transformers
 torch==2.8.0
-    # via huggingface-ghcr (pyproject.toml)
+    # via
+    #   accelerate
+    #   huggingface-ghcr (pyproject.toml)
 tqdm==4.67.1
     # via
     #   huggingface-hub

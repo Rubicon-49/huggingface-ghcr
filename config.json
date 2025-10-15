@@ -1,12 +1,62 @@
 {
-    "supported": {
-        "de-en": "Helsinki-NLP/opus-mt-de-en",
-        "en-de": "Helsinki-NLP/opus-mt-en-de",
-        "fr-de": "Helsinki-NLP/opus-mt-fr-de",
-        "de-fr": "Helsinki-NLP/opus-mt-de-fr",
-        "en-fr": "Helsinki-NLP/opus-mt-en-fr",
-        "fr-en": "Helsinki-NLP/opus-mt-fr-en",
-        "de-es": "Helsinki-NLP/opus-mt-de-es",
-        "es-de": "Helsinki-NLP/opus-mt-es-de"
+    "supported_models": {
+        "helsinki": {
+            "type": "marianmt",
+            "display_name": "Helsinki-NLP MarianMT",
+            "pairs": {
+                "de-en": "Helsinki-NLP/opus-mt-de-en",
+                "en-de": "Helsinki-NLP/opus-mt-en-de",
+                "fr-de": "Helsinki-NLP/opus-mt-fr-de",
+                "de-fr": "Helsinki-NLP/opus-mt-de-fr",
+                "en-fr": "Helsinki-NLP/opus-mt-en-fr",
+                "fr-en": "Helsinki-NLP/opus-mt-fr-en"
+            },
+            "generation_params": {
+                "max_new_tokens": 256
+            }
+        },
+        "mt5-base": {
+            "model": "google/flan-t5-base",
+            "type": "t5",
+            "display_name": "Flan-T5 Base",
+            "generation_params": {
+                "max_new_tokens": 256,
+                "temperature": 0.1,
+                "num_beams": 4,
+                "repetition_penalty": 1.2,
+                "do_sample": true
+            }
+        },
+        "mt5-large": {
+            "model": "google/flan-t5-large",
+            "type": "t5",
+            "display_name": "Flan-T5 large",
+            "generation_params": {
+                "max_new_tokens": 256,
+                "temperature": 0.1,
+                "num_beams": 4,
+                "repetition_penalty": 1.2,
+                "do_sample": true
+            }
+        },
+        "gemma3-4B": {
+            "model": "zongwei/gemma3-translator:4b",
+            "type": "ollama",
+            "display_name": "Gemma 3 4B",
+            "generation_params": {
+                "max_new_tokens": 256,
+                "temperature": 0.1
+            }
+        }
+    },
+    "supported_languages": {
+        "de": "German",
+        "en": "English",
+        "fr": "French"
+    },
+    "param_whitelist": {
+        "marianmt": ["max_new_tokens", "nuum_beans", "length_penalty", "early_stopping"],
+        "t5": ["max_new_tokens", "temperature", "num_beams", "repetition_penalty", "do_sample"],
+        "ollama": ["max_new_tokens", "temperature"]
     }
 }

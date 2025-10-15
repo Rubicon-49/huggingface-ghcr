@@ -51,7 +51,7 @@ help:
 # =========================================================
 
 # Ensure interpreter exists and matches the version window
-check-python:
+python-version-check::
 	@echo "Checking Python version from '$$(which $(PYTHON))'..."
 	@if ! command -v $(PYTHON) >/dev/null 2>&1; then \
 		echo "'$(PYTHON)' not found in PATH."; \
@@ -71,7 +71,7 @@ check-python:
 		echo "Python version $$MAJOR.$$MINOR is acceptable."; \
 	fi
 
-venv: check-python
+venv: python-version-check
 	@if [ -d "$(VENV)" ]; then \
 	  echo "virtual environment already exists: $(VENV)"; \
 	else \

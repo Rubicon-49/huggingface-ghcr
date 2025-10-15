@@ -15,7 +15,7 @@ def test_homepage_serves_html():
 
 def test_api_translation_de_en():
     """POST /api/translate should return translation JSON."""
-    body = {"text": "Guten Morgen", "source_lang": "de", "target_lang": "en"}
+    body = {"text": "Guten Morgen", "source_lang": "de", "target_lang": "en", "model_key": "helsinki"}
     response = client.post("/api/translate", json=body)
     assert response.status_code == 200
     data = response.json()
@@ -25,7 +25,7 @@ def test_api_translation_de_en():
     
 def test_invalid_language_pair():
     """Should handle unsupported language pairs gracefully."""
-    body = {"text": "Bonjour", "source_lang": "fr", "target_lang": "jp"} # not supported in config
+    body = {"text": "Bonjour", "source_lang": "fr", "target_lang": "jp", "model_key": "helsinki"} # not supported in config
     response = client.post("/api/translate", json=body)
     assert response.status_code == 400
-    assert "Unsupported" in response.text
+    assert "unsupported" in response.text
