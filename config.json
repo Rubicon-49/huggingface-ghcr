@@ -2,7 +2,7 @@
     "supported_models": {
         "helsinki": {
             "type": "marianmt",
-            "display_name": "Helsinki-NLP MarianMT",
+            "display_name": "Hugging Face - MarianMT",
             "pairs": {
                 "de-en": "Helsinki-NLP/opus-mt-de-en",
                 "en-de": "Helsinki-NLP/opus-mt-en-de",
@@ -15,22 +15,10 @@
                 "max_new_tokens": 256
             }
         },
-        "mt5-base": {
-            "model": "google/flan-t5-base",
-            "type": "t5",
-            "display_name": "Flan-T5 Base",
-            "generation_params": {
-                "max_new_tokens": 256,
-                "temperature": 0.1,
-                "num_beams": 4,
-                "repetition_penalty": 1.2,
-                "do_sample": true
-            }
-        },
         "mt5-large": {
             "model": "google/flan-t5-large",
             "type": "t5",
-            "display_name": "Flan-T5 large",
+            "display_name": "Hugging Face - Flan-T5 Large",
             "generation_params": {
                 "max_new_tokens": 256,
                 "temperature": 0.1,
@@ -42,16 +30,7 @@
         "gemma3-4B": {
             "model": "zongwei/gemma3-translator:4b",
             "type": "ollama",
-            "display_name": "Gemma 3 4B",
-            "generation_params": {
-                "max_new_tokens": 256,
-                "temperature": 0.1
-            }
-        },
-        "alama-13b": {
-            "model": "winkefinger/alma-13b:Q5_K_M",
-            "type": "ollama",
-            "display_name": "Alama 13B",
+            "display_name": "Ollama - Gemma 3 4B",
             "generation_params": {
                 "max_new_tokens": 256,
                 "temperature": 0.1
@@ -61,7 +40,10 @@
     "supported_languages": {
         "de": "German",
         "en": "English",
-        "fr": "French"
+        "fr": "French",
+        "es": "Spanish",
+        "it": "Italian",
+        "nl": "Dutch"
     },
     "param_whitelist": {
         "marianmt": ["max_new_tokens", "nuum_beans", "length_penalty", "early_stopping"],
