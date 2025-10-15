@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 # Hugging Face model pipeline helpers
 # -------------------------------------------------------------------
 
+
 @lru_cache(maxsize=32)
 def get_translator(model_name: str, model_type: str) -> Pipeline:
     """
@@ -29,7 +30,7 @@ def get_translator(model_name: str, model_type: str) -> Pipeline:
     """
 
     task = "translation" if model_type == "marianmt" else "text2text-generation"
-    
+
     try:
         translator = pipeline(task, model=model_name)
         return translator
@@ -37,16 +38,18 @@ def get_translator(model_name: str, model_type: str) -> Pipeline:
         logger.exception(f"Failed to load model '{model_name}': {e}")
         raise
 
+
 # -------------------------------------------------------------------
 # Ollama model client
 # -------------------------------------------------------------------
+
 
 async def ollama_translate(
     model_name: str,
     prompt: str,
     endpoint: str = "http://localhost:11434/api/generate",
-    generation_params: dict[str, Any] | None = None
-    ) -> str:
+    generation_params: dict[str, Any] | None = None,
+) -> str:
     """
     Send a translation request to a locally running Ollama instance.
 
@@ -62,16 +65,18 @@ async def ollama_translate(
     payload = {"model": model_name, "prompt": prompt, "stream": False}
     if generation_params:
         payload.update(generation_params)
-    try:    
+    try:
         async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(endpoint, json=payload)
             response.raise_for_status()
             data = response.json()
-            
-        translated_text = data.get("response", "").strip() if isinstance(data, dict) else str(data)
-        
+
+        translated_text = (
+            data.get("response", "").strip() if isinstance(data, dict) else str(data)
+        )
+
         return translated_text
-    
+
     except httpx.RequestError as e:
         err = cast(httpx.HTTPStatusError, e)
         logger.error(
@@ -81,6 +86,6 @@ async def ollama_translate(
             err.response.text,
         )
         raise
-    except Exception as e: 
+    except Exception as e:
         logger.exception("Unexpected error while contacting Ollama:", e)
         raise

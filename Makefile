@@ -155,3 +155,8 @@ clean:
 clean-all: clean
 	@echo "Removing virtual environment and build artifacts..."
 	rm -rf $(VENV) dist build *.egg-info
+	@echo "Removing all Hugging Face cached models and tokenizers..."
+	@rm -rf ~/.cache/huggingface/transformers
+	@rm -rf ~/.cache/huggingface/hub
+	@rm -rf ~/.cache/torch
+	@rm -rf ~/.cache/sentencepiece

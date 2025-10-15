@@ -47,6 +47,15 @@
                 "max_new_tokens": 256,
                 "temperature": 0.1
             }
+        },
+        "alama-13b": {
+            "model": "winkefinger/alma-13b:Q5_K_M",
+            "type": "ollama",
+            "display_name": "Alama 13B",
+            "generation_params": {
+                "max_new_tokens": 256,
+                "temperature": 0.1
+            }
         }
     },
     "supported_languages": {

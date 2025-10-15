@@ -2,6 +2,7 @@
 import logging
 import sys
 
+
 def setup_logging(level: int = logging.INFO) -> None:
     """
     Configure global logging for the entire application.
@@ -15,8 +16,8 @@ def setup_logging(level: int = logging.INFO) -> None:
         format="%(asctime)s - [%(levelname)s] %(name)s: %(message)s",
         handlers=[logging.StreamHandler(sys.stdout)],
     )
-    
+
     # Optional: lower verbosity of noisy libraries
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("transformers").setLevel(logging.WARNING)
-    logging.getLogger("uvicorn").setLevel(logging.INFO)   
+    logging.getLogger("uvicorn").setLevel(logging.INFO)

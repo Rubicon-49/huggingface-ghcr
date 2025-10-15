@@ -21,6 +21,7 @@ INDEX_HTML_PATH = Path(__file__).parent.parent.parent / "index.html"
 # Load configuration
 # -------------------------------------------------------------------
 
+
 def load_config(path: Path = CFG_PATH) -> dict[str, Any]:
     """
     Load the translation model configuration from a JSON file.
@@ -34,13 +35,14 @@ def load_config(path: Path = CFG_PATH) -> dict[str, Any]:
     if not path.exists():
         logger.error(f"Configuration file not found at {path}")
         raise FileNotFoundError(f"Configuration file not found at {path}")
-    
+
     try:
         with open(CFG_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
     except json.JSONDecodeError as e:
         logger.error(f"Failed to parse JSON from config file: {e}")
         raise
+
 
 # -------------------------------------------------------------------
 # Lazy-loaded global config
@@ -54,6 +56,7 @@ except Exception as e:
     logger.critical(f"Failed to load configuration: {e}")
     raise
 
+
 # -------------------------------------------------------------------
 # Helper acccessor functions
 # -------------------------------------------------------------------
@@ -65,6 +68,7 @@ def get_model_info(model_key: str) -> dict[str, Any] | None:
     if not model:
         logger.warning(f"Model key '{model_key}' not found in supported models.")
     return model
+
 
 def get_language_name(lang_code: str) -> str | None:
     """
